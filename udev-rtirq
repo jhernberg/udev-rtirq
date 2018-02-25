@@ -23,17 +23,15 @@ function blacklisted () {
   return 1
 }
 
-logger -p daemon.notice "[udev-rtirq] Starting"
-
 if [ -f $config ]; then source $config; fi
 
 if ! command -v chrt > /dev/null 2>&1; then
-  logger -p daemon.error "[udev-rtirq] The chrt command is not installed. Terminating"
+  logger -p user.err "[udev-rtirq] Error: The chrt command is not installed. Terminating"
   exit 1
 fi
 
 if ! pgrep irq/*-* >/dev/null 2>&1; then
-  logger -p daemon.error "[udev-rtirq] The kernel does not support threadirqs. Terminating"
+  logger -p user.err "[udev-rtirq] Error: The kernel does not support threadirqs. Terminating"
   exit 1
 fi
 
@@ -42,7 +40,7 @@ dev_path=`echo $2 | cut -c1-32`
 pci_address=`echo $dev_path | cut -c21-35`
 
 if blacklisted; then
-  logger -p daemon.info "[udev-rtirq] ignoring blacklisted $pci_address"
+  logger -p user.info "[udev-rtirq] Ignoring blacklisted $pci_address"
   exit 1
 fi
 
@@ -50,14 +48,14 @@ irq=`cat /sys$dev_path/irq 2>/dev/null`
 pid=`pgrep irq/$irq-`
 
 if [ -z "$pid" ]; then
-  logger -p daemon.error "[udev-rtirq] unable to retrieve the thread-id"
+  logger -p user.err "[udev-rtirq] Error: Unable to retrieve the thread-id"
   exit 1;
 fi
 
 if [ $action = a ]; then
-  logger -p daemon.info "[udev-rtirq] setting pid $pid to priority $priority for $pci_address"
+  logger -p user.info "[udev-rtirq] setting pid $pid to priority $priority for $pci_address"
   chrt -f -p $priority $pid
 else
-  logger -p daemon.info "[udev-rtirq] setting pid $pid to priority 50 for $pci_address"
+  logger -p user.info "[udev-rtirq] setting pid $pid to priority 50 for $pci_address"
   chrt -f -p 50 $pid
 fi
