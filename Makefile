@@ -11,12 +11,11 @@
 #
 #   Install udev-rtirq
 
-PREFIX  = /usr
-
 BIN_DIR    = $(DESTDIR)/usr/bin
 CONFIG_DIR = $(DESTDIR)/etc/default
 UDEV_DIR   = $(DESTDIR)/usr/lib/udev/rules.d
 
+.PHONY: install
 install:
 	install -d $(BIN_DIR)
 	install -d $(CONFIG_DIR)
