@@ -1,0 +1,60 @@
+#!/bin/bash
+
+#   Copyright (C) 2017-2018 Joakim Hernberg <jhernberg@alchemy.lu>
+#
+#   This file is part of udev-rtirq
+#
+#   udev-rtirq is free software; you can redistribute it and/or
+#   modify it under the terms of the GNU General Public License
+#   as published by the Free Software Foundation; either version 2
+#   of the License, or (at your option) any later version.
+#
+#   /usr/bin/udev-rtirq
+
+config=/etc/default/udev-rtirq
+priority=95
+
+function blacklisted () {
+  for i in "${blacklist[@]}"; do
+    if [[ $pci_address =~ $i ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+logger -p daemon.notice "[udev-rtirq] Starting"
+
+if [ -f $config ]; then source $config; fi
+
+if ! command -v chrt > /dev/null 2>&1; then
+  logger -p daemon.error "[udev-rtirq] The chrt command is not installed. Terminating"
+  exit 1
+fi
+
+if ! pgrep irq/*-* >/dev/null 2>&1; then
+  logger -p daemon.error "[udev-rtirq] The kernel does not support threadirqs. Terminating"
+  exit 1
+fi
+
+action=$1
+dev_path=`echo $2 | cut -c1-32`
+pci_address=`echo $dev_path | cut -c21-35`
+
+if blacklisted; then
+  logger -p daemon.info "[udev-rtirq] ignoring blacklisted $pci_address"
+  continue
+fi
+
+irq=`cat /sys$dev_path/irq 2>/dev/null`
+pid=`pgrep irq/$irq-`
+
+if [ -z "$pid" ]; then continue; fi
+
+if [ $action = a ]; then
+  logger -p daemon.info "[udev-rtirq] setting pid $pid to priority $priority for $pci_address"
+  chrt -f -p $priority $pid
+else
+  logger -p daemon.info "[udev-rtirq] setting pid $pid to priority 50 for $pci_address"
+  chrt -f -p 50 $pid
+fi
