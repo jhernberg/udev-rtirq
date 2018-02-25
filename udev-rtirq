@@ -43,13 +43,16 @@ pci_address=`echo $dev_path | cut -c21-35`
 
 if blacklisted; then
   logger -p daemon.info "[udev-rtirq] ignoring blacklisted $pci_address"
-  continue
+  exit 1
 fi
 
 irq=`cat /sys$dev_path/irq 2>/dev/null`
 pid=`pgrep irq/$irq-`
 
-if [ -z "$pid" ]; then continue; fi
+if [ -z "$pid" ]; then
+  logger -p daemon.error "[udev-rtirq] unable to retrieve the thread-id"
+  exit 1;
+fi
 
 if [ $action = a ]; then
   logger -p daemon.info "[udev-rtirq] setting pid $pid to priority $priority for $pci_address"
