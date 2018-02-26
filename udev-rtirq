@@ -9,7 +9,7 @@
 #   as published by the Free Software Foundation; either version 2
 #   of the License, or (at your option) any later version.
 #
-#   /usr/bin/udev-rtirq
+#   /usr/sbin/udev-rtirq
 
 config=/etc/default/udev-rtirq
 priority=95

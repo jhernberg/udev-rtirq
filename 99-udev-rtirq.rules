@@ -9,5 +9,5 @@
 #
 #   /usr/lib/udev/rules.d/99-udev-rtirq.rules
 
-ACTION=="add", SUBSYSTEM=="sound", KERNEL=="card*", RUN+="/usr/bin/systemd-run /usr/bin/udev-rtirq a $env{DEVPATH}"
-ACTION=="remove", SUBSYSTEM=="sound", KERNEL=="card*", RUN+="/usr/bin/systemd-run /usr/bin/udev-rtirq r $env{DEVPATH}"
+ACTION=="add", SUBSYSTEM=="sound", KERNEL=="card*", RUN+="/usr/bin/systemd-run /usr/sbin/udev-rtirq a $env{DEVPATH}"
+ACTION=="remove", SUBSYSTEM=="sound", KERNEL=="card*", RUN+="/usr/bin/systemd-run /usr/sbin/udev-rtirq r $env{DEVPATH}"

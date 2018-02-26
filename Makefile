@@ -11,7 +11,7 @@
 #
 #   Install udev-rtirq
 
-BIN_DIR    = $(DESTDIR)/usr/bin
+BIN_DIR    = $(DESTDIR)/usr/sbin
 CONFIG_DIR = $(DESTDIR)/etc/default
 UDEV_DIR   = $(DESTDIR)/usr/lib/udev/rules.d
 
