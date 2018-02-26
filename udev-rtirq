@@ -52,10 +52,12 @@ if [ -z "$pid" ]; then
   exit 1;
 fi
 
+thread=`ps -eo comm | grep irq/$irq-`
+
 if [ $action = a ]; then
-  logger -p user.info "[udev-rtirq] setting pid $pid to priority $priority for $pci_address"
+  logger -p user.info "[udev-rtirq] Setting $thread (PID:$pid) to priority $priority for $pci_address"
   chrt -f -p $priority $pid
 else
-  logger -p user.info "[udev-rtirq] setting pid $pid to priority 50 for $pci_address"
+  logger -p user.info "[udev-rtirq] Setting $thread (PID:$pid) to priority 50 for $pci_address"
   chrt -f -p 50 $pid
 fi
