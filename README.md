@@ -14,7 +14,7 @@ udev-rtirq automatically changes the priority of the thread handling the soundca
 or usb hub interrupt when it detects that a soundcard has been added or removed.
 
 udev-rtirq accomplishes this by installing an udev rule which calls a script to find the
-thread handling the interrupt and then changing it's priority to a predefined value.
+thread handling the interrupt and then changing its priority to a predefined value.
 
 Prerequisites:
 
@@ -22,7 +22,7 @@ udev-rtirq needs interrupt handlers exported as threads to userspace, this can b
 either by using a realtime kernel, or booting a lowlatency kernel with the "threadirqs" boot
 flag.
 
-In it's present form it also depends on systemd.
+In its present form it also depends on systemd.
 
 Installation:
 
@@ -32,7 +32,7 @@ right destinations.
 Configuration:
 
 By default udev-rtirq will set the interrupt handler to priority 95 when it detects a
-soundcard, and it will set it back to 50 when it detects it's removal.  You can change the
-priority level in /etc/defaults/udev-rtirq.  You can also blacklist certain PCI ids, say you
-have a soundcard that you'd never want to change the priority of.
+soundcard, and it will set it back to 50 when it detects its removal.  You can change the
+priority level in /etc/defaults/udev-rtirq.  You can also blacklist certain PCI ids, say
+you have a soundcard for which you'd never want to change the priority.
 
